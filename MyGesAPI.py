@@ -6,27 +6,12 @@ import dotenv
 import time
 from datetime import datetime, timedelta
 
-dotenv.load_dotenv()
 
 
 def hash(userpass):
-   return base64.b64encode(userpass.encode('ascii'))
-
-
-def getSession():
-  url = dotenv.get_key(".env","URL")
-  username = dotenv.get_key(".env","USERNAME")
-  password = dotenv.get_key(".env","PASSWORD")
-  user_token = hash(username+":"+password).decode('utf-8')
-  header = {'Authorization' : "Basic {}".format(user_token)}
-
-  req = requests.get(url,headers=header,allow_redirects=False)
-  resp = req.headers.get('location')
-  parse_token = re.search('comreseaugesskolae:/oauth2redirect#access_token=(.*)&token_type=bearer',resp)
-  token = parse_token.group(1)
-  return token
-
-
+  user_token = base64.b64encode(userpass)
+  return user_token.decode("ascii")
+  
 def getProfile():
   url = "https://api.kordis.fr/me/profile"
   req = requests.get(url,headers=header)
@@ -97,8 +82,8 @@ def getCourses(years):
   return req.text
 
 
-def getClassesID():
-  classes = json.loads(getClasses("2022"))
+def getClassesID(years):
+  classes = json.loads(getClasses(years))
   for classe in classes["result"]:
     return classe["puid"]
 
@@ -118,9 +103,8 @@ def parseTeachers():
       if information["rel"] == "photo":
         print(information["href"])
 
-
-def parseClassesStudents(classe_id):
-  students = json.loads(getClassesStudents(classe_id))
+def parseClassesStudents(classe_id,years):
+  students = json.loads(getClassesStudents(classe_id,years))
   for student in students["result"]:
     print(student["email"])
     print(student["firstname"])
@@ -154,6 +138,13 @@ def parseAgenda():
       print(course["discipline"]["teacher"])
       print(course["discipline"]["trimester"])
 
-
-header = {'Authorization' : "Bearer {}".format(getSession())}
-print(parseAgenda())
+dotenv.load_dotenv()
+username = dotenv.get_key(".env","USERNAME")
+password = dotenv.get_key(".env","PASSWORD")
+url = dotenv.get_key(".env","URL")
+userpass = (username + ":" + password).encode('ascii')
+req = requests.get(url,headers={'Authorization' : "Basic {}".format(hash(userpass))},allow_redirects=False)
+resp = req.headers.get('location')
+parse_token = re.search('comreseaugesskolae:/oauth2redirect#access_token=(.*)&token_type=bearer',resp)
+token = parse_token.group(1)
+header = {'Authorization' : "Bearer {}".format(token)}
