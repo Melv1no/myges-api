@@ -4,19 +4,19 @@
 
 
 
-## Setup
+## Installation
 
-To setup this project provide your .env file
+Reseigner vos identifiant Myges dans le fichier .env
 
 ```text
 USERNAME=
 PASSWORD=""
 URL="https://authentication.kordis.fr/oauth/authorize?response_type=token&client_id=skolae-app"
 ```
-don't touch to URL
+Pour l'URL ne changer rien, sauf si vous savez ce que vous faite (: !
 
 
-## Usage/Examples
+## Exemples d'utilisation
 
 ```python
 from MyGesAPI import *
@@ -28,9 +28,8 @@ from MyGesAPI import *
 
 print(getAbsences("2022"))
 ```
-All return is in Json, you can easly parse like this
-
-(issued of parseTeachers() function)
+Les fonctions renvoie du json, facilement 'parsable'.
+(Fonction déjà présente dans MyGesAPI)
 ```
 def parseTeachers():
   teachers = json.loads(getTeachers("2022"))
@@ -43,7 +42,7 @@ def parseTeachers():
         print(information["href"])
 
 
-        THIS return you 
+        Sa donne quelque chose comme ça
         x@x.x
         firstnameofyourteacher
         lastnameofyourteacher
@@ -53,7 +52,7 @@ def parseTeachers():
 
 
 
-## function
+## Listes des fonctions existante
 getAgenda\
 getProfile\
 getBanner\
@@ -72,7 +71,7 @@ parseClassesStudents\
 parseStudents\
 parseAgenda\
 
-You can obtains ``years`` by self define and ``studentID``,``ClassesID`` with getStudentID() & getClassesID()
+Vous pouvez trouvez les paramètre de fonction ``studentID`` et ``ClasseID`` avec les fonctions getStudentID() & getClassesID()
 
 
 
